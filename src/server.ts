@@ -4,6 +4,7 @@ import * as dotenv from "dotenv";
 import path from "path";
 import { fileURLToPath } from "url";
 import express from "express";
+import cors from 'cors';
 
 // Import all tool definitions with the correct names
 import { getAthleteProfile } from "./tools/getAthleteProfile.js";
@@ -206,6 +207,12 @@ async function startServerStdio() {
 async function startServerHttp() {
   const app = express();
   app.use(express.json());
+  app.use(cors({
+    origin: '*', // Configure appropriately for production, for example:
+    // origin: ['https://your-remote-domain.com', 'https://your-other-remote-domain.com'],
+    exposedHeaders: ['Mcp-Session-Id'],
+    allowedHeaders: ['Content-Type', 'mcp-session-id'],
+  }));
 
   // Map to store transports by session ID
   const transports: { [sessionId: string]: StreamableHTTPServerTransport } = {};
